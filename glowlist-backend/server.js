@@ -18,7 +18,7 @@ db.connect(err => {
     } else {
         console.log('Berhasil konek ke database GlowList');
     }
-});
+});                                                                                                                                                                                                       
 
 app.get('/', (req, res) => {
   res.send('Selamat Datang di GlowList API 💄');
