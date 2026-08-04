@@ -1,3 +1,9 @@
 export default function Produk() {
-    return <h2>Halaman Produk</h2>;
+    return (
+         <div className="container mt-4">
+             <h2>Halaman Produk</h2>
+              <hr />
+         </div>
+
+    )
 }

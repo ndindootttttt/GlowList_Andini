@@ -1,3 +1,8 @@
 export default function Home() {
-    return <h2>Selamat Datang di GlowList ✨</h2>;
+    return (
+         <div className="container mt-4">
+            <h2>Selamat Datang di GlowList ✨</h2>
+            <hr />
+         </div>
+    );
 }
