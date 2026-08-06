@@ -2,6 +2,8 @@ const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
 const app = express();
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 const PORT = 3001;
 
@@ -134,13 +136,23 @@ app.post('/pengguna', async (req, res) => {
         const sql = 'INSERT INTO pengguna (nama, email, password, no_hp) VALUES (?, ?, ?, ?)';
 
         db.query(sql, [nama, email, hashedPassword, no_hp], (err, result) => {
-            if (err) return res.status(500).json({ error: err.sqlMessage });
-
-            res.json({
-                message: 'Akun berhasil dibuat!',
-                id_pengguna: result.insertId
+    if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+            return res.status(400).json({
+                message: 'Email sudah terdaftar, gunakan email lain'
             });
+        }
+
+        return res.status(500).json({
+            error: err.sqlMessage
         });
+    }
+
+    res.json({
+        message: 'Akun berhasil dibuat!',
+        id_pengguna: result.insertId
+    });
+});
     } catch (err) {
         res.status(500).json({ error: 'Gagal mengenkripsi password' });
     }
