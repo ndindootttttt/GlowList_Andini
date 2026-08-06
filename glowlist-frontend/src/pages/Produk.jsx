@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Produk() {
   const [produk, setProduk] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const getProduk = async () => {
     try {
@@ -22,29 +23,28 @@ export default function Produk() {
   }, []);
 
   const handleDelete = async (id) => {
-  if (window.confirm("Yakin ingin menghapus produk ini?")) {
-    try {
-      const res = await fetch(`http://localhost:3001/produk/${id}`, {
-        method: "DELETE",
-      });
+    if (window.confirm("Yakin ingin menghapus produk ini?")) {
+      try {
+        const res = await fetch(`http://localhost:3001/produk/${id}`, {
+          method: "DELETE",
+        });
 
-      if (res.ok) {
-        alert("Produk berhasil dihapus");
-        getProduk(); // ambil ulang data terbaru
-      } else {
-        alert("Gagal menghapus produk");
+        if (res.ok) {
+          alert("Produk berhasil dihapus");
+          getProduk();
+        } else {
+          alert("Gagal menghapus produk");
+        }
+      } catch (err) {
+        console.error("Error saat delete:", err);
+        alert("Terjadi kesalahan saat menghapus data");
       }
-    } catch (err) {
-      console.error("Error saat delete:", err);
-      alert("Terjadi kesalahan saat menghapus data");
     }
-  }
-};
+  };
 
-const handleEdit = (id) => {
-  navigate(`/produk/edit/${id}`);
-};
-
+  const handleEdit = (id) => {
+    navigate(`/produk/edit/${id}`);
+  };
 
   if (loading) {
     return (
@@ -58,8 +58,9 @@ const handleEdit = (id) => {
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2>Daftar Produk GlowList ✨</h2>
+
         <Link to="/produk/tambah" className="btn btn-primary">
-        + Tambah Produk
+          + Tambah Produk
         </Link>
       </div>
 
@@ -70,6 +71,7 @@ const handleEdit = (id) => {
             <th>Judul</th>
             <th>Deskripsi</th>
             <th>Harga</th>
+            <th>More</th>
           </tr>
         </thead>
 
@@ -82,26 +84,26 @@ const handleEdit = (id) => {
                 <td>{item.deskripsi}</td>
                 <td>Rp {item.harga}</td>
 
-                 <td>
-          <button
-            className="btn btn-warning btn-sm me-2"
-            onClick={() => handleEdit(item.id_produk)}
-          >
-            Edit
-          </button>
+                <td>
+                  <button
+                    className="btn btn-warning btn-sm me-2"
+                    onClick={() => handleEdit(item.id_produk)}
+                  >
+                    Edit
+                  </button>
 
-          <button
-            className="btn btn-danger btn-sm"
-            onClick={() => handleDelete(item.id_produk)}
-          >
-            Delete
-          </button>
-        </td>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDelete(item.id_produk)}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="4" className="text-center">
+              <td colSpan="5" className="text-center">
                 Belum ada produk
               </td>
             </tr>

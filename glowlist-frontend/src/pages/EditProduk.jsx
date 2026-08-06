@@ -33,6 +33,13 @@ export default function EditProduk() {
 const handleSubmit = async (e) => {
   e.preventDefault();
 
+  const yakin = window.confirm("Yakin mau menyimpan perubahan ini?");
+
+  if (!yakin) {
+    return;
+  }
+
+
   await fetch(`http://localhost:3001/produk/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
