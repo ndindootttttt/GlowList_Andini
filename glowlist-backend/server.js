@@ -103,7 +103,7 @@ app.put('/produk/:id_produk', (req, res) => {
      });
 });
 
-app.delete('/produk/:id_produk', (req, res) => {
+app.delete('/produk/:id_produk', authJWT, (req, res) => {
     const { id_produk } = req.params;
     const sql = 'DELETE FROM produk WHERE id_produk = ?';
     db.query(sql, [id_produk], (err, result) => {
