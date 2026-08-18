@@ -81,7 +81,7 @@ app.post('/produk', (req, res) => {
     });
 });
 
-app.put('/produk/:id_produk', (req, res) => {
+app.put('/produk/:id_produk', authJWT, (req, res) => {
     const { id_produk } = req.params;
     const { judul, deskripsi, harga, id_kategori } = req.body;
 
