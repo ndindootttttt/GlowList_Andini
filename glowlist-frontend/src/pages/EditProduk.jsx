@@ -36,6 +36,11 @@ export default function EditProduk() {
 const handleSubmit = async (e) => {
     e.preventDefault();
 
+      if (fileBaru && fileBaru.size > 2 * 1024 * 1024) {
+    alert("Ukuran file terlalu besar, maksimal 2MB");
+    return;
+  }
+
     const data = new FormData();
 
     data.append("judul", formData.judul);

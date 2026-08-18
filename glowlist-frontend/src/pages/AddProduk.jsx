@@ -37,6 +37,11 @@ export default function AddProduk() {
     const handleSubmit = async (e) => {
   e.preventDefault();
 
+   if (file && file.size > 2 * 1024 * 1024) {
+    alert("Ukuran file terlalu besar, maksimal 2MB");
+    return;
+  }
+
   const data = new FormData();
 
   data.append("judul", formData.judul);
@@ -46,7 +51,7 @@ export default function AddProduk() {
   data.append("file", file);
 
   try {
-    const res = await fetch("http://localhost:5000/produk", {
+    const res = await fetch("http://localhost:3001/produk", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
