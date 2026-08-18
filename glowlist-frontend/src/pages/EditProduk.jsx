@@ -10,7 +10,10 @@ export default function EditProduk() {
     deskripsi: "",
     harga: "",
     id_kategori: "",
+    nama_file: "",
   });
+
+  const [fileBaru, setFileBaru] = useState(null);
 
   const [loading, setLoading] = useState(true);
 
@@ -31,22 +34,26 @@ export default function EditProduk() {
 };
 
 const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const yakin = window.confirm("Yakin mau menyimpan perubahan ini?");
+    const data = new FormData();
 
-  if (!yakin) {
-    return;
-  }
+    data.append("judul", formData.judul);
+    data.append("deskripsi", formData.deskripsi);
+    data.append("harga", formData.harga);
+    data.append("id_kategori", formData.id_kategori);
+
+    if (fileBaru) {
+      data.append("file", fileBaru);
+    }
 
 
   await fetch(`http://localhost:3001/produk/${id}`, {
     method: "PUT",
      headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-    body: JSON.stringify(formData),
+    body: data,
   });
 
   alert("Produk berhasil diperbarui!");
@@ -72,6 +79,33 @@ return (
           className="form-control"
         />
       </div>
+
+      <div className="mb-3">
+  <label className="form-label">Foto Saat Ini</label>
+
+  <div>
+    {formData.nama_file ? (
+      <img
+        src={`http://localhost:3001/uploads/${formData.nama_file}`}
+        alt="Foto lama"
+        style={{ width: "120px", borderRadius: "8px" }}
+      />
+    ) : (
+      <p>Tidak ada foto</p>
+    )}
+  </div>
+</div>
+
+<div className="mb-3">
+  <label className="form-label">Ganti Foto (opsional)</label>
+  <input
+    type="file"
+    accept="image/*"
+    className="form-control"
+    onChange={(e) => setFileBaru(e.target.files[0])}
+  />
+</div>
+
 
       <button type="submit" className="btn btn-success me-2">
         Simpan Perubahan
