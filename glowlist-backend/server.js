@@ -29,7 +29,7 @@ db.connect(err => {
 });                                                                                                                                                                                                       
 
 app.get('/', (req, res) => {
-  res.send('Selamat Datang di GlowList API 💄');
+    res.send('Selamat Datang di GlowList API 💄');
 });
 
 app.get('/produk', (req, res) => {
@@ -41,6 +41,32 @@ app.get('/produk', (req, res) => {
         }
 
         res.json(results);
+    });
+});
+
+app.get('/pengguna/me', authJWT, (req, res) => {
+    const id = req.user.id;
+
+    const sql = `
+        SELECT id_pengguna, nama, email, no_hp
+        FROM pengguna
+        WHERE id_pengguna = ?
+    `;
+
+    db.query(sql, [id], (err, results) => {
+        if (err) {
+            return res.status(500).json({
+                error: err.message
+            });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({
+                message: 'Pengguna tidak ditemukan'
+            });
+        }
+
+        res.json(results[0]);
     });
 });
 
@@ -58,7 +84,7 @@ app.get('/produk/:id_produk', (req, res) => {
     });
 });
 
-app.post('/produk', (req, res) => {
+app.post('/produk', authJWT, (req, res) => {
     const { judul, deskripsi, harga, id_kategori } = req.body;
 
     if (!judul || !harga) {
