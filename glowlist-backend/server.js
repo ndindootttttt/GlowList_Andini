@@ -14,6 +14,19 @@ const PORT = 3001;
 app.use(cors());
 app.use(express.json());
 
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + '-' + file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -112,7 +125,7 @@ app.post('/produk', authJWT, upload.single('file'), (req, res) => {
     });
 });
 
-app.put('/produk/:id_produk', authJWT, (req, res) => {
+app.put('/produk/:id_produk', authJWT, upload.single('file'), (req, res) => {
     const { id_produk } = req.params;
     const { judul, deskripsi, harga, id_kategori } = req.body;
 
@@ -120,19 +133,33 @@ app.put('/produk/:id_produk', authJWT, (req, res) => {
          return res.status(400).json({ message: 'Judul dan harga wajib diisi' });
     } 
 
-    const sql = 'UPDATE produk SET judul=?, deskripsi=?, harga=?, id_kategori=? WHERE id_produk=?';
-    db.query(sql, [judul, deskripsi, harga, id_kategori, id_produk], (err, result) => {
+    const sqlGet = 'SELECT nama_file FROM produk WHERE id_produk=?';
 
+    db.query(sqlGet, [id_produk], (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
 
-        if (result.affectedRows === 0) {
+        if (results.length === 0) {
             return res.status(404).json({ message: 'Produk tidak ditemukan' });
         }
+        const nama_file = req.file
+            ? req.file.filename
+            : results[0].nama_file;
+        const sql = 'UPDATE produk SET judul=?, deskripsi=?, harga=?, id_kategori=?, nama_file=? WHERE id_produk=?';
 
-        res.json({ message: 'Produk berhasil diupdate!' });
-         
-     });
+        db.query(sql, [judul, deskripsi, harga, id_kategori, nama_file, id_produk], (err, result) => {
+
+            if (err) return res.status(500).json({ error: err.message });
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: 'Produk tidak ditemukan' });
+            }
+
+            res.json({ message: 'Produk berhasil diupdate!' });
+             
+        });
+    });
 });
+
 
 app.delete('/produk/:id_produk', authJWT, (req, res) => {
     const { id_produk } = req.params;
@@ -236,21 +263,6 @@ app.post('/login', (req, res) => {
     });
   });
 });
-
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + '-' + file.originalname);
-  },
-});
-
-const upload = multer({ storage: storage });
-
 
 app.listen(PORT, () => {
   console.log(`Server GlowList jalan di http://localhost:${PORT}`);
