@@ -3,6 +3,8 @@ const mysql = require('mysql2');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const authJWT = require('./middleware');
+const path = require('path');
+const multer = require('multer');
 const app = express();
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -231,6 +233,21 @@ app.post('/login', (req, res) => {
     });
   });
 });
+
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + '-' + file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+
 
 app.listen(PORT, () => {
   console.log(`Server GlowList jalan di http://localhost:${PORT}`);
