@@ -42,7 +42,10 @@ const handleSubmit = async (e) => {
 
   await fetch(`http://localhost:3001/produk/${id}`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+     headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
     body: JSON.stringify(formData),
   });
 
