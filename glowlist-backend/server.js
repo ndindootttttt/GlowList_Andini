@@ -2,6 +2,7 @@ const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+const authJWT = require('./middleware');
 const app = express();
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
