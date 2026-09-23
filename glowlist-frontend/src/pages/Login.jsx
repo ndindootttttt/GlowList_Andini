@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
 export default function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -108,7 +109,7 @@ export default function Login() {
               </button>
 
               <button type="button" className="social-button">
-                <span className="apple-icon">●</span>
+                <span className="apple-icon">bukan macbook</span>
               </button>
 
             </div>
@@ -123,83 +124,13 @@ export default function Login() {
       </div>
 
       <div className="login-right">
-        <div className="paycounter-logo">
 
-          <div className="cashier-icon">
-            <svg viewBox="0 0 160 120">
-              <path
-                d="M18 54h35l5 25H25z"
-                fill="none"
-                stroke="white"
-                strokeWidth="7"
-                strokeLinejoin="round"
-              />
-
-              <path
-                d="M28 54V43h27v11"
-                fill="none"
-                stroke="white"
-                strokeWidth="7"
-                strokeLinejoin="round"
-              />
-
-              <circle
-                cx="105"
-                cy="28"
-                r="17"
-                fill="white"
-              />
-
-              <path
-                d="M78 78c0-20 11-30 27-30s27 10 27 30"
-                fill="none"
-                stroke="white"
-                strokeWidth="8"
-                strokeLinecap="round"
-              />
-
-              <path
-                d="M94 68h35v25H94z"
-                fill="none"
-                stroke="white"
-                strokeWidth="7"
-                strokeLinejoin="round"
-              />
-
-              <path
-                d="M139 68h12v25h-12"
-                fill="none"
-                stroke="white"
-                strokeWidth="7"
-                strokeLinejoin="round"
-              />
-
-              <path
-                d="M104 80h12M104 86h12"
-                stroke="white"
-                strokeWidth="4"
-                strokeLinecap="round"
-              />
-            </svg>
-          </div>
-
-          <div className="brand-name">
-            <span>Pay</span>
-            <span>Counter</span>
-          </div>
-
-          <div className="brand-decoration decoration-left">
-            ✦
-          </div>
-
-          <div className="brand-decoration decoration-right">
-            ✦
-          </div>
-
-          <div className="brand-curve"></div>
-
+          <img
+  src="http://localhost:3001/uploads/paycounter-logo.png"
+  alt="PayCounter"
+  className="paycounter-logo"
+/>
         </div>
-      </div>
 
     </div>
   </div>
